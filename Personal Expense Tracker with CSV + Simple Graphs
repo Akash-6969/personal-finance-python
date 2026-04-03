@@ -1,0 +1,40 @@
+# expense_tracker.py
+import csv
+import matplotlib.pyplot as plt
+
+FILENAME = "expenses.csv"
+
+def add_expense(date, category, amount):
+    with open(FILENAME, "a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([date, category, amount])
+    print(f"Added: {date} | {category} | {amount}")
+
+def show_summary():
+    data = {}
+    with open(FILENAME, "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            cat = row[1]
+            amt = float(row[2])
+            data[cat] = data.get(cat, 0) + amt
+
+    print("Expense Summary:")
+    for cat, amt in data.items():
+        print(f"{cat}: {amt}")
+
+    plt.bar(data.keys(), data.values())
+    plt.title("Expenses by Category")
+    plt.show()
+
+if __name__ == "__main__":
+    choice = input("1. Add Expense 2. Show Summary\n> ")
+    if choice == "1":
+        d = input("Date (YYYY-MM-DD): ")
+        c = input("Category: ")
+        a = input("Amount: ")
+        add_expense(d, c, a)
+    elif choice == "2":
+        show_summary()
+    else:
+        print("Invalid choice")
